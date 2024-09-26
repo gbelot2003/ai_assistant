@@ -7,6 +7,6 @@ class UserInfoServiceImpl(UserInfoService):
         # Por ejemplo, consultar una base de datos o un servicio externo
         # En este ejemplo, devolvemos información estática
         return {
-            'name': 'John Doe',
-            'email': 'john.doe@example.com'
+            'name': '',
+            'email': ''
         }
