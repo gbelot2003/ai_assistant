@@ -1,5 +1,6 @@
 # services/socket_service.py
 from flask_socketio import SocketIO, send
+from app.services.openai_service import Actions
 
 socketio = SocketIO()
 
@@ -8,7 +9,12 @@ def init_socketio(app):
 
     @socketio.on('message')
     def handle_message(message):
-        print(message)
-        send(message, broadcast=True)
+        
+        print(f"Tu: {message}")
+
+        respuesta = Actions().generar_respuesta(message)
+
+        print(f"GPT : {respuesta}")
+        send(respuesta, broadcast=True)
 
     return socketio
