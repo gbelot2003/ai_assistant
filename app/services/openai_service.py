@@ -12,6 +12,8 @@ class Actions:
         self.usuario = {"nombre": "", "email": ""}
 
     def generar_respuesta(self, prompt):
+        
+        print(f"Tu: {prompt}")
         messages = [{"role": "user", "content": prompt}]
 
         response = client.chat.completions.create(
@@ -19,6 +21,7 @@ class Actions:
         )
 
         # Accede a la respuesta correcta
+        print(f"GPT : {response.choices[0].message.content.strip()}") # type: ignore
         return response.choices[0].message.content.strip() # type: ignore
 
 
