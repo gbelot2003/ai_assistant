@@ -1,4 +1,5 @@
 # app/services/openai_service.py
+from app.modules.nombre_extractor import NombreExtractor
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -10,9 +11,9 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 class OpenAIService:
     def __init__(self):
         self.user_info = {}
-        self.greeted = False
-        self.waiting_for_email = False
-        self.initial_request = None
+        # El extractor de nombres es inyectado como una dependencia
+        nombre_extractor = NombreExtractor()
+        self.nombre_extractor = nombre_extractor
 
     def generate_response(self, prompt):
 
@@ -20,6 +21,13 @@ class OpenAIService:
 
     def handle_request(self, prompt):
         print(f"Tu: {prompt}")
+
+         # Utilizamos el método inyectado para extraer el nombre
+        nombre_usuario = self.nombre_extractor.extraer_nombre(prompt)
+        
+        #if nombre_usuario:
+        print(f"Tu nombre es: {nombre_usuario}")
+
         messages = [
             {"role": "user", "content": prompt}
         ]
