@@ -1,0 +1,44 @@
+/* Estilo para las burbujas de mensajes */
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    max-width: 80%;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+}
+
+/* Estilo para los mensajes del usuario */
+.message.user {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+    color: #0f5132;
+    border-top-right-radius: 0;
+}
+
+/* Estilo para los mensajes de otros */
+.message.other {
+    background-color: #e2e3e5;
+    align-self: flex-start;
+    color: #383d41;
+    border-top-left-radius: 0;
+}
+
+/* Mejoras para la barra de desplazamiento */
+.chat-box::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
