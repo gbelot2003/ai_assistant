@@ -25,11 +25,8 @@ class OpenAIService:
         print(f"Tu: {prompt}")
 
          # Utilizamos el método inyectado para extraer el nombre
-        nombre_usuario = self.nombre_extractor.extraer_nombre(prompt)
+        self.nombre_usuario = self.nombre_extractor.extraer_nombre(prompt)
         
-        if nombre_usuario:
-            print(f"Tu nombre es: {nombre_usuario}")
-
         if not self.nombre_usuario:
             messages = [
                 {"role": "system", "content": "Saluda cortezmente y pregunta el nombre del usuario y en que se le puede servir"},
@@ -43,6 +40,7 @@ class OpenAIService:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo", messages=messages, max_tokens=150, temperature=0.1 # type: ignore
         )
+        
 
         # Accede a la respuesta correcta
         print(f"GPT : {response.choices[0].message.content.strip()}") # type: ignore

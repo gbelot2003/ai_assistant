@@ -1,3 +1,4 @@
+# app/modules/nombre_extractor.py
 import re
 
 class NombreExtractor:
@@ -16,6 +17,7 @@ class NombreExtractor:
             r"es\s+([a-z]+)",  # "Es Juan"
             r"soy el/la\s+([a-z]+)",  # "Soy el Juan"
             r"por favor, llámame\s+([a-z]+)"  # "Por favor, llámame Juan"
+            r"hola, s+([a-z]+)"  # "hola, Juan"
         ]
 
     # Método que intenta extraer el nombre de un texto dado
