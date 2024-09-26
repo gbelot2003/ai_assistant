@@ -15,24 +15,12 @@ class OpenAIService:
         self.initial_request = None
 
     def generate_response(self, prompt):
-        if not self.greeted:
-            self.greeted = True
-            return "¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?"
-        elif not self.user_info.get('email'):
-            self.user_info['email'] = prompt
-            self.waiting_for_email = True
-            return "Gracias por proporcionarnos tu correo electrónico. Ahora puedes hacer tu petición."
-        elif self.waiting_for_email:
-            self.initial_request = prompt
-            self.waiting_for_email = False
-            return self.handle_request(prompt)
-        else:
-            return self.handle_request(prompt)
+
+        return self.handle_request(prompt)
 
     def handle_request(self, prompt):
         print(f"Tu: {prompt}")
         messages = [
-            {"role": "system", "content": f"El usuario necesita ayuda con: {self.initial_request}"},
             {"role": "user", "content": prompt}
         ]
 
