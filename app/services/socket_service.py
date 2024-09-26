@@ -10,11 +10,8 @@ def init_socketio(app):
     @socketio.on('message')
     def handle_message(message):
         
-
-
         respuesta = Actions().generar_respuesta(message)
-
-       
+        
         send(respuesta, broadcast=True)
 
     return socketio
