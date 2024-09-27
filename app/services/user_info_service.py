@@ -12,13 +12,3 @@ class UserInfoService:
 
     def tiene_nombre(self):
         return self.nombre is not None
-
-    # def set_email(self, email):
-    #     self.email = email
-
-    # def get_email(self):
-    #     return self.email
-
-
-    # def tiene_email(self):
-    #     return self.email is not None

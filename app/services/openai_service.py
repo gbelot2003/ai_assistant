@@ -14,6 +14,7 @@ class OpenAIService:
         self.user_info_service = UserInfoService()  # Servicio que centraliza la info del usuario
         self.nombre_service = NombreService(self.user_info_service)  # Servicio especializado en manejar nombres
         self.system_message_service = SystemMessageService(self.user_info_service)  # Servicio de mensajes de 'system'
+        self.respuesta_nombre = None
 
     def generate_response(self, prompt):
         return self.handle_request(prompt)
@@ -35,10 +36,16 @@ class OpenAIService:
 
         # Obtener la respuesta generada por el modelo
         respuesta_modelo = response.choices[0].message.content.strip()  # type: ignore
+
         print(f"GPT: {respuesta_modelo}")
 
         # Detectar si el modelo ha identificado un nombre en la respuesta
-        respuesta_nombre = self.nombre_service.detectar_y_almacenar_nombre(respuesta_modelo)
-        print(f"respuesta_nombre : {respuesta_nombre}")
+        self.respuesta_nombre = self.detectarNombre(respuesta_modelo)
 
         return respuesta_modelo
+
+    def detectarNombre(self, prompt):
+        self.nombre_service.detectar_y_almacenar_nombre(prompt)
+        print(self.user_info_service.tiene_nombre())
+        return self.user_info_service.get_nombre()
+        

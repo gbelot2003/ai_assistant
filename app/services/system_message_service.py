@@ -18,18 +18,16 @@ class SystemMessageService:
                  {"role": "user", "content": prompt}
             )
         
-        # Aquí podrías agregar otros checks, como si falta el correo electrónico u otra información
-        # if not self.user_info_service.tiene_email():
-        #     messages.append(
-        #         {"role": "system", "content": "Solicita el correo electrónico del usuario de manera educada."}
-        #     )
-
         return messages
 
     def generar_mensaje_continuacion(self, prompt):
         """
         Genera el mensaje de continuación basado en la entrada del usuario.
         """
-        return [
+        messages = []
+
+        messages.append(
             {"role": "user", "content": prompt}
-        ]
+        )
+
+        return messages
