@@ -1,17 +1,16 @@
-# services/socket_service.py
+# app/services/socket_service.py
 from flask_socketio import SocketIO, send
-from app.services.openai_service import Actions
+from app.services.openai_service import OpenAIService
 
 socketio = SocketIO()
+openai_service = OpenAIService()
 
 def init_socketio(app):
     socketio.init_app(app)
 
     @socketio.on('message')
     def handle_message(message):
-        
-        respuesta = Actions().generar_respuesta(message)
-        
-        send(respuesta, broadcast=True)
+        response = openai_service.generate_response(message)
+        send(response, broadcast=True)
 
     return socketio
