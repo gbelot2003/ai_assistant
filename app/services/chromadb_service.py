@@ -24,6 +24,8 @@ def search_in_chromadb(query_embedding, collection_name="pdf_collection"):
         n_results=3  # Número de resultados a devolver
     )
     if results['documents']:
-        return results['documents']
+        # Asegurarse de que 'documents' es una lista de cadenas de texto
+        relevant_chunks = [doc[0] for doc in results['documents']]
+        return relevant_chunks
     else:
-        return "No se encontró información relevante."
+        return ["No se encontró información relevante."]
