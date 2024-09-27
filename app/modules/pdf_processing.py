@@ -5,7 +5,7 @@ def extract_text_from_pdf(pdf_path):
     text = ""
     with fitz.open(pdf_path) as doc:
         for page in doc:
-            text += page.get_text()
+            text += page.get_text() # type: ignore
     return text
 
 def split_text_into_chunks(text, max_tokens=100):
