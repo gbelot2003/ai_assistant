@@ -1,3 +1,4 @@
+// script.js
 // Conexión con el servidor WebSocket
 var socket = io();
 
