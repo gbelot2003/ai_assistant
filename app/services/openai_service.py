@@ -11,11 +11,18 @@ import os
 load_dotenv(override=True)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 class OpenAIService:
     def __init__(self):
-        self.user_info_service = UserInfoService()  # Servicio que centraliza la info del usuario
-        self.nombre_service = NombreService(self.user_info_service)  # Servicio especializado en manejar nombres
-        self.system_message_service = SystemMessageService(self.user_info_service)  # Servicio de mensajes de 'system'
+        self.user_info_service = (
+            UserInfoService()
+        )  # Servicio que centraliza la info del usuario
+        self.nombre_service = NombreService(
+            self.user_info_service
+        )  # Servicio especializado en manejar nombres
+        self.system_message_service = SystemMessageService(
+            self.user_info_service
+        )  # Servicio de mensajes de 'system'
         self.respuesta_nombre = None
 
     def generate_response(self, prompt, relevant_chunks=None):
@@ -31,9 +38,21 @@ class OpenAIService:
         if not messages:
             messages = self.system_message_service.generar_mensaje_continuacion(prompt)
 
+        # Incluir los fragmentos relevantes en el prompt
+        if relevant_chunks:
+            relevant_info = "\n".join(relevant_chunks)
+            messages.append(
+                {
+                    "role": "system",
+                    "content": f"Información relevante:\n{relevant_info}",
+                }
+            )
+
+        messages.append({"role": "user", "content": prompt})
+
         # Enviar los mensajes a la API de OpenAI
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo", messages=messages, max_tokens=150, temperature=0.1  # type: ignore
+            model="gpt-3.5-turbo", messages=messages, max_tokens=450, temperature=0.1  # type: ignore
         )
 
         # Obtener la respuesta generada por el modelo
@@ -43,10 +62,6 @@ class OpenAIService:
 
         # Detectar si el modelo ha identificado un nombre en la respuesta
         self.respuesta_nombre = self.detectarNombre(respuesta_modelo)
-
-        # Incluir los fragmentos relevantes en la respuesta
-        if relevant_chunks:
-            respuesta_modelo += "\n\nInformación relevante:\n" + "\n".join(relevant_chunks)
 
         return respuesta_modelo
 
