@@ -1,4 +1,3 @@
-```markdown
 # Assistant App
 
 Esta aplicación es un asistente basado en Flask y Flask-SocketIO que utiliza OpenAI para generar respuestas basadas en la entrada del usuario. Además, procesa y consulta información de archivos PDF almacenados en ChromaDB para proporcionar respuestas más precisas y contextualizadas.
@@ -100,6 +99,13 @@ assistant-app/
 ├── requirements.txt
 └── .env
 ```
+
+## TODOS
+- Agregar registro de usuarios
+- Buscar información de usuarios ya contactados
+- Grabar las conversaciones
+- revisar las conversaciones por usuario para contexto
+- Agregar acciones para RESTApi
 
 ## Contribuciones
 
