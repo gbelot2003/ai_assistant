@@ -1,3 +1,4 @@
+# app.services.chromadb_service.py
 import chromadb
 
 # Inicializar ChromaDB con SQLite
