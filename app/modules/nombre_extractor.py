@@ -1,9 +1,7 @@
-# app/modules/nombre_extractor.py
 import re
 
 class NombreExtractor:
     def __init__(self):
-        # Definir los patrones una vez, todos en minúsculas
         self.patrones_nombre = [
             r"me llamo\s+([a-z]+)",  # "Me llamo Juan"
             r"mi nombre es\s+([a-z]+)",  # "Mi nombre es Juan"
@@ -16,8 +14,8 @@ class NombreExtractor:
             r"yo soy\s+([a-z]+)",  # "Yo soy Juan"
             r"es\s+([a-z]+)",  # "Es Juan"
             r"soy el/la\s+([a-z]+)",  # "Soy el Juan"
-            r"por favor, llámame\s+([a-z]+)"  # "Por favor, llámame Juan"
-            r"hola, s+([a-z]+)"  # "hola, Juan"
+            r"por favor, llámame\s+([a-z]+)",  # "Por favor, llámame Juan"
+            r"hola,\s*([a-z]+)"  # "Hola, Juan"
         ]
 
     # Método que intenta extraer el nombre de un texto dado
