@@ -8,12 +8,15 @@ def configure_wsi_routes(app, socketio):
         return render_template("wsi.html")
     
     # Endpoint para recibir la URL y el mensaje simulado desde la interfaz
-    @socketio.on('send_message')
+    @socketio.on('message')
     def handle_send_message(data):
-        print(f"WSI: {data}")
         target_url = data.get('url')
         message_body = data.get('message', 'Este es un mensaje simulado desde Twilio')
         from_number = data.get('from_number', '+14155551234')  # Número simulado del remitente por defecto
+
+        print(f"Target URL: {target_url}")
+        print(f"Message Body: {message_body}")
+        print(f"From Number: {from_number}")
 
         # Simulando el POST de Twilio
         simulated_twilio_post = {
