@@ -1,4 +1,4 @@
-# app.modules.embedding_processing.py
+# app/modules/embedding_processing.py
 
 from openai import OpenAI
 from dotenv import load_dotenv
