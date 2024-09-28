@@ -6,22 +6,22 @@
 <div class="container">
     <h2>Twilio POST Simulator</h2>
     <form id="simulator-form">
-        <div>
-            <label for="url">URL del API:</label>
-            <input type="text" id="url" name="url" placeholder="http://example.com/endpoint" required style="width: 100%; padding: 8px; margin: 8px 0;">
+        <div class="mb-3">
+            <label for="url" class="form-label">URL del API:</label>
+            <input type="text" id="url" name="url" class="form-control" placeholder="http://example.com/endpoint" required>
         </div>
-        <div>
-            <label for="message">Mensaje:</label>
-            <input type="text" id="message" name="message" placeholder="Escribe el mensaje aquí..." style="width: 100%; padding: 8px; margin: 8px 0;">
+        <div class="mb-3">
+            <label for="message" class="form-label">Mensaje:</label>
+            <input type="text" id="message" name="message" class="form-control" placeholder="Escribe el mensaje aquí...">
         </div>
-        <div>
-            <label for="from_number">Número de Teléfono Simulado (From):</label>
-            <input type="text" id="from_number" name="from_number" placeholder="+14155551234" value="+14155551234" style="width: 100%; padding: 8px; margin: 8px 0;">
+        <div class="mb-3">
+            <label for="from_number" class="form-label">Número de Teléfono Simulado (From):</label>
+            <input type="text" id="from_number" name="from_number" class="form-control" placeholder="+14155551234" value="+14155551234">
         </div>
-        <button type="submit" style="padding: 10px 15px;">Enviar Mensaje Simulado</button>
+        <button type="submit" class="btn btn-primary">Enviar Mensaje Simulado</button>
     </form>
 
-    <div class="log" id="log">
+    <div class="log mt-4" id="log">
         <strong>Log de Respuestas:</strong>
         <div id="response-log"></div>
     </div>
@@ -29,35 +29,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-    const socket = io();
-
-    document.getElementById('simulator-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const url = document.getElementById('url').value;
-        const message = document.getElementById('message').value;
-        const from_number = document.getElementById('from_number').value;
-
-        // Envío del mensaje simulado al backend
-        fetch('/send_message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url, message, from_number })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                console.log('Mensaje enviado correctamente:', data.response);
-            } else {
-                console.log('Error al enviar el mensaje:', data.response);
-            }
-        });
-    });
-
-    // Recepción de respuestas del servidor a través de WebSockets
-    socket.on('server_response', function(msg) {
-        const logDiv = document.getElementById('response-log');
-        logDiv.innerHTML += `<p>${msg.data}</p>`;
-    });
-</script>
+<script src="/static/script.js"></script>
 {% endblock %}

@@ -4,7 +4,6 @@ from app.services.socket_service import init_socketio
 from app.models.conversation import Conversation
 from app.router.wsi_routes import configure_wsi_routes
 from app.extensions import db
-import requests
 
 def configure_routes(app, socketio):
     # Ruta para el home
@@ -12,11 +11,6 @@ def configure_routes(app, socketio):
     def index():
         return render_template("index.html")
     
-
-    # Configurar las rutas de WSI y send_message
-    configure_wsi_routes(app, socketio)
-
-
     # Ruta para obtener todas las conversaciones
     @app.route("/conversations")
     def get_conversations():
@@ -32,6 +26,10 @@ def configure_routes(app, socketio):
             'user_id': conv.user_id,
             'timestamp': conv.timestamp
         } for conv in conversations])
+
+
+    # Configurar las rutas de WSI y send_message
+    configure_wsi_routes(app, socketio)
 
     # Inicializar socketio con los servicios
     init_socketio(app)
