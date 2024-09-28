@@ -5,21 +5,24 @@ from app.services.openai_service import OpenAIService
 from app.services.chromadb_service import search_in_chromadb
 from app.modules.embedding_processing import get_embedding_for_chunk
 from app.models.conversation import Conversation
+from app.services.user_info_service import UserInfoService
 from app.extensions import db
 
 def configure_twilio_routes(app):
     openai_service = OpenAIService()
+    user_info_service = UserInfoService()  # Servicio que centraliza la info del usuario
+
 
     @app.route('/api/twilio', methods=['POST'])
     def twilio_webhook():
-
-        print(f"API: {request}")
         
         # Obtener el mensaje de Twilio
         message_body = request.form.get('Body')
         from_number = request.form.get('From')
 
-       
+        # Necesitamos saber si tenemos el from_number en la base de datos
+        # para saber si es un usuario nuevo o no
+
         # Buscar en ChromaDB los fragmentos más relevantes
         query_embedding = get_embedding_for_chunk(message_body)
         relevant_chunks = search_in_chromadb(query_embedding)

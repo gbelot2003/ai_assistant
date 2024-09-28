@@ -20,6 +20,9 @@ class UserInfoService:
 
     def tiene_nombre(self):
         return self.nombre is not None
+    
+    def tiene_telefono(self):
+        return self.telefono is not None
 
     def almacenar_nombre(self, nombre, telefono):
         user = User.query.filter_by(telefono=telefono).first()

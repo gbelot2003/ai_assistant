@@ -54,6 +54,8 @@ class OpenAIService:
         # Detectar si el modelo ha identificado un nombre en la respuesta
         self.respuesta_nombre = self.detectarNombre(respuesta_modelo)
 
+        
+
         # Actualizar el nombre en la base de datos si se detecta un número telefónico
         if self.respuesta_nombre:
             from_number = self.user_info_service.get_telefono()
