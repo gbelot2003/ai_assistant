@@ -1,16 +1,22 @@
-# app/router/routes.py
 from flask import render_template, jsonify, request
 from app.services.socket_service import init_socketio
 from app.models.conversation import Conversation
-from app.router.wsi_routes import configure_wsi_routes
 from app.extensions import db
+from app.router.wsi_routes import configure_wsi_routes
+from app.router.twilio_routes import configure_twilio_routes
 
 def configure_routes(app, socketio):
+    # Configurar las rutas de WSI y send_message
+    configure_wsi_routes(app)
+
+    # Configurar las rutas de Twilio
+    configure_twilio_routes(app)
+
     # Ruta para el home
     @app.route("/")
     def index():
         return render_template("index.html")
-    
+
     # Ruta para obtener todas las conversaciones
     @app.route("/conversations")
     def get_conversations():
@@ -26,10 +32,6 @@ def configure_routes(app, socketio):
             'user_id': conv.user_id,
             'timestamp': conv.timestamp
         } for conv in conversations])
-
-
-    # Configurar las rutas de WSI y send_message
-    configure_wsi_routes(app, socketio)
 
     # Inicializar socketio con los servicios
     init_socketio(app)

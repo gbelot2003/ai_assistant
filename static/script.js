@@ -37,32 +37,3 @@ function addMessageToChat(message, sender) {
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight;  // Scroll automático
 }
-
-// Lógica para el Twilio Simulator
-document.getElementById('simulator-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const url = document.getElementById('url').value;
-    const message = document.getElementById('message').value;
-    const from_number = document.getElementById('from_number').value;
-
-    // Envío del mensaje simulado al backend
-    fetch('/send_message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, message, from_number })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            console.log('Mensaje enviado correctamente:', data.response);
-        } else {
-            console.log('Error al enviar el mensaje:', data.response);
-        }
-    });
-});
-
-// Recepción de respuestas del servidor a través de WebSockets en el Twilio Simulator
-socket.on('server_response', function(msg) {
-    const logDiv = document.getElementById('response-log');
-    logDiv.innerHTML += `<p>${msg.data}</p>`;
-});

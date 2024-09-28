@@ -5,10 +5,10 @@
 {% block content %}
 <div class="container">
     <h2>Twilio POST Simulator</h2>
-    <form id="simulator-form">
+    <form id="simulator-form" method="POST">
         <div class="mb-3">
             <label for="url" class="form-label">URL del API:</label>
-            <input type="text" id="url" name="url" class="form-control" placeholder="http://example.com/endpoint" required>
+            <input type="text" id="url" name="url" class="form-control" value="http://127.0.0.1:5000/api/twilio" placeholder="http://example.com/endpoint" required>
         </div>
         <div class="mb-3">
             <label for="message" class="form-label">Mensaje:</label>
@@ -18,7 +18,7 @@
             <label for="from_number" class="form-label">Número de Teléfono Simulado (From):</label>
             <input type="text" id="from_number" name="from_number" class="form-control" placeholder="+14155551234" value="+14155551234">
         </div>
-        <button type="submit" class="btn btn-primary">Enviar Mensaje Simulado</button>
+        <button type="submit" id="send-btn" class="btn btn-primary">Enviar Mensaje Simulado</button>
     </form>
 
     <div class="log mt-4" id="log">
@@ -29,5 +29,51 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="/static/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    // Al hacer clic en el botón enviar en el chat
+    document.getElementById('send-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        sendMessage();
+    });
+
+    // Enviar mensaje con la tecla Enter en el chat
+    document.getElementById('message').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Función para enviar el mensaje en el chat
+    function sendMessage() {
+        const url = document.getElementById('url').value;
+        const message = document.getElementById('message').value;
+        const from_number = document.getElementById('from_number').value;
+
+        if (message) {
+            axios.post('/api/send_message', { url, message, from_number })
+                .then(response => {
+                    const responseMessage = response.data.response.message;
+                    addMessageToChat(responseMessage, 'other');  // Añadir la respuesta del servidor al chat
+                })
+                .catch(error => {
+                    console.error('Error al enviar el mensaje:', error);
+                });
+
+            addMessageToChat(message, 'user');  // Añadir el mensaje del usuario al chat
+            document.getElementById('message').value = '';  // Limpiar el campo
+        }
+    }
+
+    // Función para añadir un mensaje al chat
+    function addMessageToChat(message, sender) {
+        let logDiv = document.getElementById('response-log');
+        let messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender);  // Añadir clase 'user' o 'other'
+        messageElement.textContent = message;
+        logDiv.appendChild(messageElement);
+        logDiv.scrollTop = logDiv.scrollHeight;  // Scroll automático
+    }
+</script>
 {% endblock %}
