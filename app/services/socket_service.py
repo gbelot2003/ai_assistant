@@ -1,8 +1,9 @@
-# app/services/socket_service.py
 from flask_socketio import SocketIO, send
 from app.services.openai_service import OpenAIService
 from app.services.chromadb_service import search_in_chromadb
 from app.modules.embedding_processing import get_embedding_for_chunk
+from app.models.conversation import Conversation
+from app.extensions import db
 
 socketio = SocketIO()
 openai_service = OpenAIService()
@@ -19,5 +20,10 @@ def init_socketio(app):
         # Generar respuesta utilizando los fragmentos relevantes
         response = openai_service.generate_response(message, relevant_chunks)
         send(response, broadcast=True)
+
+        # Guardar la conversación en la base de datos
+        conversation = Conversation(user_message=message, bot_response=response)
+        db.session.add(conversation)
+        db.session.commit()
 
     return socketio
