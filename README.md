@@ -103,7 +103,7 @@ assistant-app/
 ## TODOS
 - Agregar registro de usuarios
 - Buscar información de usuarios ya contactados
-- Grabar las conversaciones
+- ~~Grabar las conversaciones~~
 - revisar las conversaciones por usuario para contexto
 - Agregar acciones para RESTApi
 
