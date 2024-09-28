@@ -1,5 +1,3 @@
-# app/services/openai_service.py
-
 from app.services.nombre_service import NombreService
 from app.services.user_info_service import UserInfoService
 from app.services.system_message_service import SystemMessageService
@@ -11,18 +9,11 @@ import os
 load_dotenv(override=True)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
 class OpenAIService:
     def __init__(self):
-        self.user_info_service = (
-            UserInfoService()
-        )  # Servicio que centraliza la info del usuario
-        self.nombre_service = NombreService(
-            self.user_info_service
-        )  # Servicio especializado en manejar nombres
-        self.system_message_service = SystemMessageService(
-            self.user_info_service
-        )  # Servicio de mensajes de 'system'
+        self.user_info_service = UserInfoService()  # Servicio que centraliza la info del usuario
+        self.nombre_service = NombreService(self.user_info_service)  # Servicio especializado en manejar nombres
+        self.system_message_service = SystemMessageService(self.user_info_service)  # Servicio de mensajes de 'system'
         self.respuesta_nombre = None
 
     def generate_response(self, prompt, relevant_chunks=None):
@@ -63,9 +54,16 @@ class OpenAIService:
         # Detectar si el modelo ha identificado un nombre en la respuesta
         self.respuesta_nombre = self.detectarNombre(respuesta_modelo)
 
+        # Actualizar el nombre en la base de datos si se detecta un número telefónico
+        if self.respuesta_nombre:
+            from_number = self.user_info_service.get_telefono()
+            if from_number:
+                self.user_info_service.almacenar_nombre(self.respuesta_nombre, from_number)
+
+        print(f"System: {self.respuesta_nombre}")
+
         return respuesta_modelo
 
     def detectarNombre(self, prompt):
         self.nombre_service.detectar_y_almacenar_nombre(prompt)
-        print(self.user_info_service.tiene_nombre())
         return self.user_info_service.get_nombre()

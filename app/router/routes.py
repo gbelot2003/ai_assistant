@@ -12,6 +12,9 @@ def configure_routes(app, socketio):
     # Configurar las rutas de Twilio
     configure_twilio_routes(app)
 
+    # Inicializar socketio con los servicios
+    init_socketio(app)
+
     # Ruta para el home
     @app.route("/")
     def index():
@@ -33,5 +36,3 @@ def configure_routes(app, socketio):
             'timestamp': conv.timestamp
         } for conv in conversations])
 
-    # Inicializar socketio con los servicios
-    init_socketio(app)
