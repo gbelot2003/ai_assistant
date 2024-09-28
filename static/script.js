@@ -46,7 +46,7 @@ document.getElementById('simulator-form').addEventListener('submit', function(ev
     const from_number = document.getElementById('from_number').value;
 
     // Envío del mensaje simulado al backend
-    fetch('/send_message', {
+    fetch('/api/send_message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url, message, from_number })

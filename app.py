@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_socketio import SocketIO
+from flask_sqlalchemy import SQLAlchemy
 from app.router.routes import configure_routes
 from app.services.chromadb_service import store_chunks_in_chromadb
 from app.modules.pdf_processing import extract_text_from_pdf, split_text_into_chunks
