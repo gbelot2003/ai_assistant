@@ -75,5 +75,32 @@
         logDiv.appendChild(messageElement);
         logDiv.scrollTop = logDiv.scrollHeight;  // Scroll automático
     }
+
+    // Solicitar nombre si no se tiene en base de datos
+    function registerUser() {
+        const from_number = document.getElementById('from_number').value;
+
+        axios.get(`/check_user?phone_number=${from_number}`)
+            .then(response => {
+                if (!response.data.name) {
+                    const name = prompt('Por favor, ingresa tu nombre:');
+                    if (name) {
+                        axios.post('/register_user', { phone_number: from_number, name })
+                            .then(response => {
+                                console.log('Usuario registrado:', response.data);
+                            })
+                            .catch(error => {
+                                console.error('Error al registrar usuario:', error);
+                            });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al verificar usuario:', error);
+            });
+    }
+
+    // Registrar usuario al cargar la página
+    window.onload = registerUser;
 </script>
 {% endblock %}

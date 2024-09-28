@@ -1,7 +1,6 @@
 import os
 from flask import Flask
 from flask_socketio import SocketIO
-from flask_sqlalchemy import SQLAlchemy
 from app.router.routes import configure_routes
 from app.services.chromadb_service import store_chunks_in_chromadb
 from app.modules.pdf_processing import extract_text_from_pdf, split_text_into_chunks
@@ -9,6 +8,9 @@ from app.modules.embedding_processing import get_embedding_for_chunk
 from dotenv import load_dotenv
 from app.config import Config
 from app.extensions import db
+from app.services.socket_service import init_socketio
+from app.services.conversation_service import ConversationService
+from app.services.user_service import UserService
 
 load_dotenv()
 
@@ -37,6 +39,10 @@ for pdf_path in pdf_paths:
 
 # Configurar las rutas
 configure_routes(app, socketio)
+
+# Inicializar servicios
+conversation_service = ConversationService()
+user_service = UserService()
 
 if __name__ == "__main__":
     with app.app_context():

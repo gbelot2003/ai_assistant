@@ -1,5 +1,8 @@
 from flask import render_template, jsonify, request
 import requests
+from flask_socketio import emit
+from app.services.conversation_service import ConversationService
+from app.services.user_service import UserService
 
 def configure_wsi_routes(app):
     @app.route('/wsi', methods=['GET'])
@@ -13,6 +16,9 @@ def configure_wsi_routes(app):
         target_url = data.get('url')
         message_body = data.get('message', 'Este es un mensaje simulado desde Twilio')
         from_number = data.get('from_number', '+14155551234')  # Número simulado del remitente por defecto
+
+        # Obtener o crear el usuario
+        user = UserService().get_or_create_user(from_number)
 
         # Simulando el POST de Twilio
         simulated_twilio_post = {
@@ -37,6 +43,10 @@ def configure_wsi_routes(app):
         try:
             response = requests.post(target_url, data=simulated_twilio_post)
             response_data = response.json()  # Asegurarse de que la respuesta sea un JSON
+
+            # Guardar la conversación
+            ConversationService().add_conversation(user.id, message_body, response_data.get('message'))
+
             return jsonify({"status": "success", "response": response_data})
         except Exception as e:
             return jsonify({"status": "error", "response": str(e)})

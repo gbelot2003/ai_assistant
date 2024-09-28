@@ -1,22 +1,96 @@
 {% extends "base.html" %}
 
-{% block title %}Chat en Tiempo Real{% endblock %}
+{% block title %}AI Assistant{% endblock %}
 
 {% block content %}
-<div class="card shadow-lg">
-    <div class="card-header text-center">
-        <h1 class="mb-0">Chat en Tiempo Real</h1>
+<div class="container">
+    <h2>AI Assistant</h2>
+    <div class="log mt-4" id="log">
+        <strong>Log de Respuestas:</strong>
+        <div id="response-log"></div>
     </div>
-    <div class="card-body p-0">
-        <div id="chat-box" class="chat-box p-3 overflow-auto"></div>
-        <div class="input-group p-3">
-            <input id="message" type="text" class="form-control" placeholder="Escribe un mensaje..." autocomplete="off" />
-            <button id="send-btn" class="btn btn-primary">Enviar</button>
+    <form id="chat-form" method="POST">
+        <div class="mb-3">
+            <label for="message" class="form-label">Mensaje:</label>
+            <input type="text" id="message" name="message" class="form-control" placeholder="Escribe el mensaje aquí...">
         </div>
-    </div>
+        <button type="submit" id="send-btn" class="btn btn-primary">Enviar Mensaje</button>
+    </form>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="/static/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    // Al hacer clic en el botón enviar en el chat
+    document.getElementById('send-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        sendMessage();
+    });
+
+    // Enviar mensaje con la tecla Enter en el chat
+    document.getElementById('message').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Función para enviar el mensaje en el chat
+    function sendMessage() {
+        const message = document.getElementById('message').value;
+
+        if (message) {
+            axios.post('/api/send_message', { message })
+                .then(response => {
+                    const responseMessage = response.data.response.message;
+                    addMessageToChat(responseMessage, 'other');  // Añadir la respuesta del servidor al chat
+                })
+                .catch(error => {
+                    console.error('Error al enviar el mensaje:', error);
+                });
+
+            addMessageToChat(message, 'user');  // Añadir el mensaje del usuario al chat
+            document.getElementById('message').value = '';  // Limpiar el campo
+        }
+    }
+
+    // Función para añadir un mensaje al chat
+    function addMessageToChat(message, sender) {
+        let logDiv = document.getElementById('response-log');
+        let messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender);  // Añadir clase 'user' o 'other'
+        messageElement.textContent = message;
+        logDiv.appendChild(messageElement);
+        logDiv.scrollTop = logDiv.scrollHeight;  // Scroll automático
+    }
+
+    // Solicitar número telefónico y nombre si no se tiene en base de datos
+    function registerUser() {
+        const phone_number = prompt('Por favor, ingresa tu número telefónico:');
+        if (phone_number) {
+            axios.get(`/check_user?phone_number=${phone_number}`)
+                .then(response => {
+                    if (!response.data.name) {
+                        const name = prompt('Por favor, ingresa tu nombre:');
+                        if (name) {
+                            axios.post('/register_user', { phone_number, name })
+                                .then(response => {
+                                    console.log('Usuario registrado:', response.data);
+                                })
+                                .catch(error => {
+                                    console.error('Error al registrar usuario:', error);
+                                });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al verificar usuario:', error);
+                });
+        }
+    }
+
+    // Registrar usuario al cargar la página
+    window.onload = registerUser;
+</script>
 {% endblock %}
