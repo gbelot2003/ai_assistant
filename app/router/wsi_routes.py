@@ -1,18 +1,19 @@
 from flask import render_template, jsonify, request
 import requests
+from flask_socketio import emit
 
-def configure_wsi_routes(app):
+def configure_wsi_routes(app, socketio):
     @app.route('/wsi', methods=['GET'])
     def wsi():
         return render_template("wsi.html")
     
     # Endpoint para recibir la URL y el mensaje simulado desde la interfaz
-    @app.route('/api/send_message', methods=['POST'])
-    def send_message():
-        data = request.json
-        target_url = data.get('url') # type: ignore
-        message_body = data.get('message', 'Este es un mensaje simulado desde Twilio') # type: ignore
-        from_number = data.get('from_number', '+14155551234')  # type: ignore Número simulado del remitente por defecto
+    @socketio.on('send_message')
+    def handle_send_message(data):
+        print(f"WSI: {data}")
+        target_url = data.get('url')
+        message_body = data.get('message', 'Este es un mensaje simulado desde Twilio')
+        from_number = data.get('from_number', '+14155551234')  # Número simulado del remitente por defecto
 
         # Simulando el POST de Twilio
         simulated_twilio_post = {
@@ -37,6 +38,7 @@ def configure_wsi_routes(app):
         try:
             response = requests.post(target_url, data=simulated_twilio_post)
             response_data = response.text
-            return jsonify({"status": "success", "response": response_data})
+            # Emitir la respuesta a la interfaz en tiempo real
+            emit('server_response', {'data': response_data})
         except Exception as e:
-            return jsonify({"status": "error", "response": str(e)})
+            emit('server_response', {'data': str(e)})

@@ -40,20 +40,8 @@
         const message = document.getElementById('message').value;
         const from_number = document.getElementById('from_number').value;
 
-        // Envío del mensaje simulado al backend
-        fetch('/api/send_message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url, message, from_number })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                console.log('Mensaje enviado correctamente:', data.response);
-            } else {
-                console.log('Error al enviar el mensaje:', data.response);
-            }
-        });
+        // Emitir el mensaje simulado al servidor a través de WebSockets
+        socket.emit('send_message', { url, message, from_number });
     });
 
     // Recepción de respuestas del servidor a través de WebSockets en el Twilio Simulator
