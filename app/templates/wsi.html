@@ -54,7 +54,8 @@
         if (message) {
             axios.post('/api/send_message', { url, message, from_number })
                 .then(response => {
-                    addMessageToChat(response.data.response, 'other');  // Añadir la respuesta del servidor al chat
+                    const responseMessage = response.data.response.message;
+                    addMessageToChat(responseMessage, 'other');  // Añadir la respuesta del servidor al chat
                 })
                 .catch(error => {
                     console.error('Error al enviar el mensaje:', error);

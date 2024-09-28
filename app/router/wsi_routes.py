@@ -36,7 +36,7 @@ def configure_wsi_routes(app):
         # Envío del POST a la URL proporcionada
         try:
             response = requests.post(target_url, data=simulated_twilio_post)
-            response_data = response.text
+            response_data = response.json()  # Asegurarse de que la respuesta sea un JSON
             return jsonify({"status": "success", "response": response_data})
         except Exception as e:
             return jsonify({"status": "error", "response": str(e)})
