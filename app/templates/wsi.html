@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     <h2>Twilio POST Simulator</h2>
-    <form id="simulator-form">
+    <form id="simulator-form" method="POST">
         <div class="mb-3">
             <label for="url" class="form-label">URL del API:</label>
             <input type="text" id="url" name="url" class="form-control" value="http://127.0.0.1:5000/api/twilio" placeholder="http://example.com/endpoint" required>
@@ -29,10 +29,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    // Conexión con el servidor WebSocket
-    var socket = io();
-
     // Al hacer clic en el botón enviar en el chat
     document.getElementById('send-btn').addEventListener('click', function(event) {
         event.preventDefault();
@@ -54,16 +52,18 @@
         const from_number = document.getElementById('from_number').value;
 
         if (message) {
-            socket.emit('message', { url, message, from_number });  // Enviar el mensaje al servidor
+            axios.post('/api/send_message', { url, message, from_number })
+                .then(response => {
+                    addMessageToChat(response.data.response, 'other');  // Añadir la respuesta del servidor al chat
+                })
+                .catch(error => {
+                    console.error('Error al enviar el mensaje:', error);
+                });
+
             addMessageToChat(message, 'user');  // Añadir el mensaje del usuario al chat
             document.getElementById('message').value = '';  // Limpiar el campo
         }
     }
-
-    // Escuchar mensajes desde el servidor en el chat
-    socket.on('server_response', function(msg) {
-        addMessageToChat(msg.data, 'other');  // Añadir el mensaje de otros al chat
-    });
 
     // Función para añadir un mensaje al chat
     function addMessageToChat(message, sender) {

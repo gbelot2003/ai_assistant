@@ -7,7 +7,7 @@ from app.router.twilio_routes import configure_twilio_routes
 
 def configure_routes(app, socketio):
     # Configurar las rutas de WSI y send_message
-    configure_wsi_routes(app, socketio)
+    configure_wsi_routes(app)
 
     # Configurar las rutas de Twilio
     configure_twilio_routes(app)
