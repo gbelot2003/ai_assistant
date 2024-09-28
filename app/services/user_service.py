@@ -5,7 +5,7 @@ class UserService:
     def get_or_create_user(self, phone_number, name=None):
         user = User.query.filter_by(phone_number=phone_number).first()
         if not user:
-            user = User(phone_number=phone_number, name=name)
+            user = User(phone_number=phone_number, name=name) # type: ignore
             db.session.add(user)
             db.session.commit()
         return user

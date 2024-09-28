@@ -43,8 +43,8 @@ def configure_routes(app, socketio):
     @app.route("/register_user", methods=['POST'])
     def register_user():
         data = request.json
-        phone_number = data.get('phone_number')
-        name = data.get('name')
+        phone_number = data.get('phone_number') # type: ignore
+        name = data.get('name') # type: ignore
 
         if not phone_number or not name:
             return jsonify({"status": "error", "message": "Phone number and name are required"}), 400

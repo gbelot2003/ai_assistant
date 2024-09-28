@@ -26,7 +26,7 @@ def init_socketio(app):
         send(response, broadcast=True)
 
         # Guardar la conversación en la base de datos
-        conversation = Conversation(user_message=message, bot_response=response, user_id=user_id)
+        conversation = Conversation(user_message=message, bot_response=response, user_id=user_id) # type: ignore
         db.session.add(conversation)
         db.session.commit()
 

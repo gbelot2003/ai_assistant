@@ -13,9 +13,9 @@ def configure_wsi_routes(app):
     @app.route('/api/send_message', methods=['POST'])
     def send_message():
         data = request.json
-        target_url = data.get('url')
-        message_body = data.get('message', 'Este es un mensaje simulado desde Twilio')
-        from_number = data.get('from_number', '+14155551234')  # Número simulado del remitente por defecto
+        target_url = data.get('url') # type: ignore
+        message_body = data.get('message', 'Este es un mensaje simulado desde Twilio') # type: ignore
+        from_number = data.get('from_number', '+14155551234')  # type: ignore Número simulado del remitente por defecto
 
         # Obtener o crear el usuario
         user = UserService().get_or_create_user(from_number)
